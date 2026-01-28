@@ -10,7 +10,7 @@ spec:
   
   source:
     # Remplacez par l'URL de votre repository Git
-    repoURL: https://github.com/votre-utilisateur/test-app-k8s.git
+    repoURL: https://github.com/099farou/test-app-k8s.git
     targetRevision: main  # ou master, selon votre branche
     path: overlays/dev
   

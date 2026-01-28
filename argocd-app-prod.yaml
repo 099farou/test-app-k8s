@@ -9,7 +9,7 @@ spec:
   project: default
   
   source:
-    repoURL: https://github.com/votre-utilisateur/test-app-k8s.git
+    repoURL: https://github.com/099farou/test-app-k8s.git
     targetRevision: main
     path: overlays/prod
   
