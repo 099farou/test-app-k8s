@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: demo-app
+  annotations:
+    # Adaptez selon votre ingress controller (nginx, traefik, etc.)
+    # kubernetes.io/ingress.class: nginx
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx  # ou traefik, selon votre setup
+  rules:
+  - host: demo-app.example.com  # À modifier selon votre domaine
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: demo-app
+            port:
+              number: 80
+  # Décommentez pour HTTPS avec cert-manager
+  # tls:
+  # - hosts:
+  #   - demo-app.example.com
+  #   secretName: demo-app-tls

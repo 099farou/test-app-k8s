@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: demo-app-dev
+  namespace: argocd  # ArgoCD est généralement dans son propre namespace
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  
+  source:
+    # Remplacez par l'URL de votre repository Git
+    repoURL: https://github.com/votre-utilisateur/test-app-k8s.git
+    targetRevision: main  # ou master, selon votre branche
+    path: overlays/dev
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+  
+  syncPolicy:
+    automated:
+      prune: true      # Supprime les ressources qui ne sont plus dans Git
+      selfHeal: true   # Corrige automatiquement les dérives
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true  # Crée le namespace s'il n'existe pas
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  
+  # Ignore les différences sur certains champs (utile pour les secrets gérés)
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas  # Si vous utilisez HPA
