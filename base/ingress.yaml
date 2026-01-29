@@ -3,13 +3,16 @@ kind: Ingress
 metadata:
   name: demo-app
   annotations:
-    # Adaptez selon votre ingress controller (nginx, traefik, etc.)
-    # kubernetes.io/ingress.class: nginx
-    # cert-manager.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"  # Si vous avez cert-manager
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
-  ingressClassName: nginx  # ou traefik, selon votre setup
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - demo.k8s-dev.heyyel.paas.jedikubes.com
+    secretName: demo-app-tls
   rules:
-  - host: demo-app.example.com  # À modifier selon votre domaine
+  - host: demo.k8s-dev.heyyel.paas.jedikubes.com
     http:
       paths:
       - path: /
@@ -19,8 +22,3 @@ spec:
             name: demo-app
             port:
               number: 80
-  # Décommentez pour HTTPS avec cert-manager
-  # tls:
-  # - hosts:
-  #   - demo-app.example.com
-  #   secretName: demo-app-tls
