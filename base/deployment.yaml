@@ -14,12 +14,37 @@ spec:
       labels:
         app: demo-app
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        fsGroup: 101
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: nginx
         image: nginxinc/nginx-unprivileged:1.25-alpine
         ports:
         - containerPort: 8080
           name: http
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          runAsNonRoot: true
+          runAsUser: 101
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080  # ← Changez de 80 à 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080  # ← Changez de 80 à 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
         resources:
           requests:
             memory: "64Mi"
@@ -30,18 +55,6 @@ spec:
         volumeMounts:
         - name: html
           mountPath: /usr/share/nginx/html
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 10
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 5
-          periodSeconds: 5
       volumes:
       - name: html
         configMap:
