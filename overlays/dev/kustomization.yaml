@@ -3,23 +3,35 @@ kind: Kustomization
 
 namespace: dev
 
-bases:
+resources:
   - ../../base
-
-namePrefix: dev-
-
-commonLabels:
-  environment: dev
 
 replicas:
   - name: demo-app
     count: 1
 
-patchesStrategicMerge:
-  - ingress-patch.yaml
-
-configMapGenerator:
-  - name: demo-app-html
-    behavior: merge
-    literals:
-      - env=development
+patches:
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: demo-app
+      spec:
+        template:
+          spec:
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 101
+              fsGroup: 101
+              seccompProfile:
+                type: RuntimeDefault
+            containers:
+              - name: nginx
+                securityContext:
+                  allowPrivilegeEscalation: false
+                  capabilities:
+                    drop:
+                      - ALL
+                  readOnlyRootFilesystem: false
+                  runAsNonRoot: true
+                  runAsUser: 101
