@@ -71,7 +71,7 @@ data:
                 <div class="badge">☸️ Kubernetes</div>
                 <div class="badge">🔄 ArgoCD</div>
                 <p style="margin-top: 20px;">
-                    Cette application démontre un déploiement GitOps complet avec ArgoCD vers votre cluster Kubernetes.
+                    Cette application démontre un déploiement GitOps complet avec ArgoCD vers votre cluster Kubernetes(Farouk yh a passé d'ici merci ).
                 </p>
             </div>
             <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8;">
